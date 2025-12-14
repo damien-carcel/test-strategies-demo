@@ -1,0 +1,39 @@
+version: 3
+
+tasks:
+  install:
+    aliases:
+      - i
+    cmds:
+      - docker compose run --rm demo composer install --prefer-dist --optimize-autoloader --no-interaction
+    desc: Install project dependencies
+
+  outdated:
+    aliases:
+      - o
+    cmds:
+      - docker compose run --rm demo composer outdated
+    desc: Check for outdated dependencies
+    preconditions:
+      - sh: test -d vendor
+        msg: Cannot update the dependencies if they are not already installed
+
+  update:
+    aliases:
+      - u
+    cmds:
+      - docker compose run --rm demo composer update --prefer-dist --optimize-autoloader --no-interaction {{.CLI_ARGS}}
+    desc: Update project dependencies
+    preconditions:
+      - sh: test -d vendor
+        msg: Cannot update the dependencies if they are not already installed
+
+  recipes:
+    aliases:
+      - r
+    cmds:
+      - docker compose run --rm demo composer recipes:update {{.CLI_ARGS}}
+    desc: Update Symfony recipes
+    preconditions:
+      - sh: test -d vendor
+        msg: Cannot update the Symfony recipes if dependencies are not already installed

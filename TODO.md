@@ -1,6 +1,5 @@
 # TODO
 
-- Add Taskfiles to handle the project.
 - Add tests:
   - Install PHPUnit and setup a "unit" tests suite.
   - Add a "memory" Symfony tests environment.
