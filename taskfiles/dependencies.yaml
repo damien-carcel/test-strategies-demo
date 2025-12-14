@@ -37,3 +37,10 @@ tasks:
     preconditions:
       - sh: test -d vendor
         msg: Cannot update the Symfony recipes if dependencies are not already installed
+
+  require:
+    aliases:
+      - req
+    cmds:
+      - docker compose run --rm demo composer require {{.CLI_ARGS}}
+    desc: Require new dependencies

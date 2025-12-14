@@ -4,12 +4,12 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^3.1",
         "doctrine/doctrine-migrations-bundle": "^4.0",
-        "doctrine/orm": "^3.5",
+        "doctrine/orm": "^3.5.8",
         "symfony/console": "8.0.*",
         "symfony/dotenv": "8.0.*",
         "symfony/flex": "^2.10",
@@ -69,5 +69,8 @@
             "require": "8.0.*",
             "docker": false
         }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.92"
     }
 }

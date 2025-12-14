@@ -1,0 +1,41 @@
+version: '3'
+
+includes:
+  database:
+    taskfile: ./database.yaml
+    internal: true
+
+tasks:
+  code-style:check:
+    aliases:
+      - code-style:c
+      - cs:check
+      - cs:c
+    cmds:
+      - docker compose run --rm demo vendor/bin/php-cs-fixer check {{.CLI_ARGS}}
+    desc: Check code-style
+
+  code-style:fix:
+    aliases:
+      - code-style:f
+      - cs:fix
+      - cs:f
+    cmds:
+      - docker compose run --rm demo vendor/bin/php-cs-fixer fix {{.CLI_ARGS}}
+    desc: Fix code-style
+
+  all:
+    cmds:
+      - echo ""
+      - echo "|-----------------------|"
+      - echo "|   Check code-style    |"
+      - echo "|-----------------------|"
+      - echo ""
+      - task: code-style:check
+      - echo ""
+      - echo "|-----------------------|"
+      - echo "|       All Tests       |"
+      - echo "| Successfully Executed |"
+      - echo "|-----------------------|"
+      - echo ""
+    desc: Execute all the tests
