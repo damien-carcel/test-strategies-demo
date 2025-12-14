@@ -1,0 +1,28 @@
+services:
+  demo:
+    build:
+      context: docker/php
+      target: dev
+    environment:
+      COMPOSER_CACHE_DIR: /home/composer/.cache/composer
+      COMPOSER_HOME: /home/composer/.config/composer
+      PHP_CONF_DISPLAY_ERRORS: 1
+      PHP_CONF_DISPLAY_STARTUP_ERRORS: 1
+      PHP_CONF_ERROR_REPORTING: 32767
+      PHP_CONF_OPCACHE_VALIDATE_TIMESTAMP: 1
+      PHP_CONF_ZEND_ASSERTIONS: 1
+      PHP_IDE_CONFIG: serverName=demo
+      XDEBUG_CONFIG: client_host=172.17.0.1
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+    user: ${HOST_USER_IDS:-1000:1000}
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+      - type: bind
+        source: ${HOST_COMPOSER_CACHE_DIR:-~/.cache/composer}
+        target: /home/composer/.cache/composer
+      - type: bind
+        source: ${HOST_COMPOSER_HOME:-~/.config/composer}
+        target: /home/composer/.cache/composer
+    working_dir: /app

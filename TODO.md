@@ -1,6 +1,5 @@
 # TODO
 
-- Dockerize the project.
 - Add Taskfiles to handle the project.
 - Add tests:
   - Install PHPUnit and setup a "unit" tests suite.
