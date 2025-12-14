@@ -1,0 +1,23 @@
+version: 3
+
+tasks:
+  start:
+    desc: Start the database
+    cmds:
+      - docker compose up -d --wait database
+    aliases:
+      - s
+
+  stop:
+    aliases:
+      - s
+    cmds:
+      - docker compose stop database
+    desc: Stop the database
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - docker compose run --rm demo bin/console doctrine:migrations:migrate --no-interaction
+    aliases:
+      - m

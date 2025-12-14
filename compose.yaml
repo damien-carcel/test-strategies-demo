@@ -26,3 +26,20 @@ services:
         source: ${HOST_COMPOSER_HOME:-~/.config/composer}
         target: /home/composer/.cache/composer
     working_dir: /app
+
+  database:
+    environment:
+      POSTGRES_DB: ${PGSQL_DB:-app}
+      POSTGRES_USER: ${PGSQL_USERNAME:-app}
+      POSTGRES_PASSWORD: ${PGSQL_PASSWORD:-password}
+    image: postgres:18
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+      start_period: 0s
+      start_interval: 0s
+    ports:
+      - "5432:5432"
+    restart: unless-stopped

@@ -1,6 +1,7 @@
 # TODO
 
 - Add tests:
+  - Add static analysis tools.
   - Install PHPUnit and setup a "unit" tests suite.
   - Add a "memory" Symfony tests environment.
   - Setup an "acceptance" test suite that is only using the "memory" environment.

@@ -10,8 +10,9 @@
 
 First, install the dependencies with `task dependencies:install`.
 
-Run `task run:dev` for development mode with hot-reload and access the application through
-[http://localhost:8080](http://localhost:8080).
+Then, start the database with `task database:start`.
+
+You are now ready to run the tests.
 
 The full list of actions can be accessed by running the following command in your usual terminal:
 
