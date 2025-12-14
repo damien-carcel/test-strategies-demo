@@ -17,9 +17,17 @@
         "symfony/runtime": "8.0.*",
         "symfony/yaml": "8.0.*"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.92",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0"
+    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
+            "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
@@ -65,12 +73,9 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "8.0.*",
             "docker": false
         }
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.92"
     }
 }
