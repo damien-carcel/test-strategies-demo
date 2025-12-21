@@ -3,3 +3,6 @@ parameters:
     paths:
         - config/
         - src/
+        - tests/
+    excludePaths:
+        - tests/bootstrap.php

@@ -31,6 +31,13 @@ tasks:
       - docker compose run --rm demo vendor/bin/phpstan analyse {{.CLI_ARGS}}
     desc: Run static analysis
 
+  unit:
+    aliases:
+      - u
+    cmds:
+      - docker compose run --rm demo bin/phpunit --testdox {{.CLI_ARGS}}
+    desc: Run unit tests
+
   all:
     cmds:
       - echo ""
@@ -45,6 +52,12 @@ tasks:
       - echo "|-----------------------|"
       - echo ""
       - task: static-analysis
+      - echo ""
+      - echo "|-----------------------|"
+      - echo "|    Run unit tests     |"
+      - echo "|-----------------------|"
+      - echo ""
+      - task: unit
       - echo ""
       - echo "|-----------------------|"
       - echo "|       All Tests       |"
