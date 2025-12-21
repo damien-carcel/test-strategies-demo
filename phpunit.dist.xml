@@ -21,6 +21,18 @@
         <testsuite name="Unit Tests">
             <directory>tests/Unit</directory>
         </testsuite>
+
+        <testsuite name="Acceptance Tests">
+            <directory>tests/Acceptance</directory>
+        </testsuite>
+
+        <testsuite name="Integration Tests">
+            <directory>tests/Integration</directory>
+        </testsuite>
+
+        <testsuite name="End-to-End Tests">
+            <directory>tests/EndToEnd</directory>
+        </testsuite>
     </testsuites>
 
     <source ignoreSuppressionOfDeprecations="true"

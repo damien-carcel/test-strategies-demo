@@ -2,8 +2,10 @@ version: '3'
 
 includes:
   database:
-    taskfile: ./database.yaml
     internal: true
+    taskfile: ./database.yaml
+    vars:
+      APP_ENV: test
 
 tasks:
   code-style:check:
@@ -38,6 +40,52 @@ tasks:
       - docker compose run --rm demo bin/phpunit --testsuite "Unit Tests" --testdox {{.CLI_ARGS}}
     desc: Run unit tests
 
+  acceptance:
+    aliases:
+      - a
+    cmds:
+      - docker compose run --rm demo bin/phpunit --testsuite "Acceptance Tests" --testdox {{.CLI_ARGS}}
+    desc: Run acceptance tests
+
+  integration-with-in-memory-adapters:
+    aliases:
+      - im
+    cmds:
+      - docker compose run --rm --env TEST_ENV="memory" demo bin/phpunit --testsuite "Integration Tests" --group "with-in-memory-adapters" --testdox {{.CLI_ARGS}}
+    desc: Run integration tests
+
+  integration-with-production-adapters:
+    aliases:
+      - ip
+    cmds:
+      - docker compose run --rm --env TEST_ENV="test" demo bin/phpunit --testsuite "Integration Tests" --group "with-production-adapters" --testdox {{.CLI_ARGS}}
+    desc: Run integration tests
+
+  integration:
+    aliases:
+      - i
+    cmds:
+      - task: integration-with-in-memory-adapters
+      - task: integration-with-production-adapters
+    desc: Run integration tests
+
+  end-to-end:
+    aliases:
+      - e
+    cmds:
+      - docker compose run --rm demo bin/phpunit --testsuite "End-to-End Tests" --testdox {{.CLI_ARGS}}
+    desc: Run end-to-end tests
+
+  setup-database:
+    aliases:
+      - db:setup
+      - db:s
+    cmds:
+      - task: database:start
+      - task: database:create:test-db
+      - task: database:migrate
+    desc: Setup the database for integration tests and end-to-end tests
+
   all:
     cmds:
       - echo ""
@@ -58,6 +106,28 @@ tasks:
       - echo "|-----------------------|"
       - echo ""
       - task: unit
+      - echo ""
+      - echo "|-----------------------|"
+      - echo "| Run acceptance tests  |"
+      - echo "|-----------------------|"
+      - echo ""
+      - task: acceptance
+      - echo ""
+      - echo "|-----------------------|"
+      - echo "| Run integration tests |"
+      - echo "|-----------------------|"
+      - echo ""
+      - task: integration-with-in-memory-adapters
+      - echo ""
+      - task: setup-database
+      - echo ""
+      - task: integration-with-production-adapters
+      - echo ""
+      - echo "|-----------------------|"
+      - echo "| Run end-to-end tests  |"
+      - echo "|-----------------------|"
+      - echo ""
+      - task: end-to-end
       - echo ""
       - echo "|-----------------------|"
       - echo "|       All Tests       |"
