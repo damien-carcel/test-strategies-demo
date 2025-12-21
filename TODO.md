@@ -1,8 +1,8 @@
 # TODO
 
 - Add tests:
-  - Setup a "unit" tests suite.
   - Add a "memory" Symfony tests environment.
-  - Setup an "acceptance" test suite that is only using the "memory" environment.
-  - Setup an "integration" test suite that run tests in both the "test" and "memory" environments.
+  - Set up an "acceptance" test suite only using the "memory" environment.
+  - Set up an "integration" test suite that runs tests in both the "test" and "memory" environments. Use only the Symfony KernelTestCase.
+  - Set up an "end-to-end" test suite that runs tests in the "test" environment. Use Symfony WebTestCase.
 - Setup CircleCI.
