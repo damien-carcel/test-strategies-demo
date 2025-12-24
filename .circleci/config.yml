@@ -1,0 +1,77 @@
+version: 2.1
+
+workflows:
+  pull_request:
+    jobs:
+      - tests:
+          context:
+            - docker-hub-credentials
+          filters:
+            branches:
+              ignore:
+                - main
+
+jobs:
+  tests:
+    machine:
+      image: ubuntu-2404:2025.09.1
+    steps:
+      - checkout
+      - set_host_user_ids_environment_variable
+      - run:
+          name: Setup Composer cache and config directories
+          command: mkdir -p ~/.cache/composer ~/.config/composer
+      - run:
+          name: Install the latest Task binary
+          command: npm install -g @go-task/cli
+      - restore_cache:
+          keys:
+            - composer-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}
+            - composer-{{ .Environment.CACHE_VERSION }}-
+      - run:
+          name: Install dependencies
+          command: task dependencies:install
+      - save_cache:
+          key: composer-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}
+          paths:
+            - ./vendor
+      - run:
+          name: Create the test results directory
+          command: mkdir -p test_results
+      - run:
+          name: Check the code-style
+          command: task tests:code-style:check -- --format=junit > test_results/cs.xml
+      - run:
+          name: Run the static-analysis
+          command: task tests:static-analysis -- --error-format=junit > test_results/sa.xml
+      - run:
+          name: Run the unit tests
+          command: task tests:unit -- --log-junit test_results/unit.xml
+      - run:
+          name: Run the acceptance tests
+          command: task tests:acceptance -- --log-junit test_results/acceptance.xml
+      - run:
+          name: Run the integration tests for "in memory" adapters
+          command: task tests:integration -- --log-junit test_results/integration.xml
+      - run:
+          name: Set up the database for integration tests and end-to-end tests
+          command: task setup-database
+      - run:
+          name: Run the integration tests for both "in memory" and "production" adapters
+          command: task tests:integration -- --log-junit test_results/integration.xml
+      - run:
+          name: Run the end-to-end tests
+          command: task tests:end-to-end -- --log-junit test_results/e2e.xml
+      - store_artifacts:
+          path: test_results
+      - store_test_results:
+          path: test_results
+
+commands:
+  set_host_user_ids_environment_variable:
+    description: "Set Docker Compose HOST_USER_IDS environment variable according to the host virtual machine"
+    steps:
+      - run:
+          name: Set Docker Compose HOST_USER_IDS environment variable according to the host virtual machine
+          command: |
+            echo 'export HOST_USER_IDS="$(id -u):$(id -g)"' >> $BASH_ENV

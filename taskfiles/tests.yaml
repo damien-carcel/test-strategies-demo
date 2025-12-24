@@ -15,7 +15,7 @@ tasks:
       - cs:c
     cmds:
       - docker compose run --rm demo vendor/bin/php-cs-fixer check {{.CLI_ARGS}}
-    desc: Check code-style
+    desc: Check the code-style
 
   code-style:fix:
     aliases:
@@ -24,42 +24,42 @@ tasks:
       - cs:f
     cmds:
       - docker compose run --rm demo vendor/bin/php-cs-fixer fix {{.CLI_ARGS}}
-    desc: Fix code-style
+    desc: Fix the code-style
 
   static-analysis:
     aliases:
       - sa
     cmds:
       - docker compose run --rm demo vendor/bin/phpstan analyse {{.CLI_ARGS}}
-    desc: Run static analysis
+    desc: Run the static analysis
 
   unit:
     aliases:
       - u
     cmds:
       - docker compose run --rm demo bin/phpunit --testsuite "Unit Tests" --testdox {{.CLI_ARGS}}
-    desc: Run unit tests
+    desc: Run the unit tests
 
   acceptance:
     aliases:
       - a
     cmds:
       - docker compose run --rm demo bin/phpunit --testsuite "Acceptance Tests" --testdox {{.CLI_ARGS}}
-    desc: Run acceptance tests
+    desc: Run the acceptance tests
 
   integration-with-in-memory-adapters:
     aliases:
       - im
     cmds:
       - docker compose run --rm --env TEST_ENV="memory" demo bin/phpunit --testsuite "Integration Tests" --group "with-in-memory-adapters" --testdox {{.CLI_ARGS}}
-    desc: Run integration tests
+    desc: Run the integration tests for "in memory" adapters
 
   integration-with-production-adapters:
     aliases:
       - ip
     cmds:
       - docker compose run --rm --env TEST_ENV="test" demo bin/phpunit --testsuite "Integration Tests" --group "with-production-adapters" --testdox {{.CLI_ARGS}}
-    desc: Run integration tests
+    desc: Run the integration tests for "production" adapters
 
   integration:
     aliases:
@@ -67,14 +67,14 @@ tasks:
     cmds:
       - task: integration-with-in-memory-adapters
       - task: integration-with-production-adapters
-    desc: Run integration tests
+    desc: Run the integration tests for both "in memory" and "production" adapters
 
   end-to-end:
     aliases:
       - e
     cmds:
       - docker compose run --rm demo bin/phpunit --testsuite "End-to-End Tests" --testdox {{.CLI_ARGS}}
-    desc: Run end-to-end tests
+    desc: Run the end-to-end tests
 
   setup-database:
     aliases:
@@ -84,7 +84,7 @@ tasks:
       - task: database:start
       - task: database:create:test-db
       - task: database:migrate
-    desc: Setup the database for integration tests and end-to-end tests
+    desc: Set up the database for integration tests and end-to-end tests
 
   all:
     cmds:
