@@ -6,7 +6,7 @@
 - Docker Compose v2
 - Task
 
-## How to use the presentation
+## How to use the demo
 
 First, install the dependencies with `task dependencies:install`.
 

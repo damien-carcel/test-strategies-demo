@@ -55,7 +55,7 @@ jobs:
           command: task tests:integration -- --log-junit test_results/integration.xml
       - run:
           name: Set up the database for integration tests and end-to-end tests
-          command: task setup-database
+          command: task tests:setup-database
       - run:
           name: Run the integration tests for both "in memory" and "production" adapters
           command: task tests:integration -- --log-junit test_results/integration.xml
