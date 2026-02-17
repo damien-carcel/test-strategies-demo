@@ -15,6 +15,7 @@
         "symfony/flex": "^2.10",
         "symfony/framework-bundle": "8.0.*",
         "symfony/runtime": "8.0.*",
+        "symfony/uid": "8.0.*",
         "symfony/yaml": "8.0.*"
     },
     "require-dev": {
@@ -26,7 +27,8 @@
         "phpstan/phpstan-symfony": "^2.0.14",
         "phpunit/phpunit": "^12.5.12",
         "symfony/browser-kit": "8.0.*",
-        "symfony/css-selector": "8.0.*"
+        "symfony/css-selector": "8.0.*",
+        "symfony/maker-bundle": "^1.66"
     },
     "config": {
         "allow-plugins": {
