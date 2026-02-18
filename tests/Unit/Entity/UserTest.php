@@ -14,7 +14,7 @@ final class UserTest extends TestCase
     {
         $user = new User('john.doe@email.com', 'John', 'Doe');
 
-        self::assertTrue(Uuid::isValid($user->getId()));
+        self::assertTrue(Uuid::isValid($user->id));
     }
 
     #[Test]
