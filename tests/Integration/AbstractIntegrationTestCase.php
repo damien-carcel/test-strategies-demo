@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
+use App\Tests\Shared\GetServiceTrait;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class AbstractIntegrationTestCase extends KernelTestCase
 {
+    use GetServiceTrait;
+
     /**
      * @param array<string, string> $options
      */
@@ -42,24 +45,6 @@ abstract class AbstractIntegrationTestCase extends KernelTestCase
             $databaseConnection = self::getContainer()->get('doctrine.dbal.default_connection');
             $databaseConnection->executeStatement('TRUNCATE TABLE "users"');
         }
-    }
-
-    /**
-     * @template T
-     *
-     * @param class-string<T> $serviceId
-     *
-     * @return T
-     */
-    protected static function getService(string $serviceId)
-    {
-        $service = self::getContainer()->get($serviceId);
-
-        if (!$service instanceof $serviceId) {
-            throw new \RuntimeException(\sprintf('The service "%s" is not an instance of "%s".', $serviceId, $service::class));
-        }
-
-        return $service;
     }
 
     private static function getCurrentTestEnvironment(): string

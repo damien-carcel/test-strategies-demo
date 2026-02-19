@@ -25,6 +25,10 @@ services:
     App\Domain\Repository\UserRepository:
         class: App\Infrastructure\Persistence\Database\DatabaseUserRepository
 
+    # To remove once used in controllers
+    App\Domain\Service\CreateUser:
+        public: true
+
 when@memory:
     services:
         _defaults:
@@ -33,4 +37,3 @@ when@memory:
 
         App\Domain\Repository\UserRepository:
             class: App\Infrastructure\Persistence\InMemory\InMemoryUserRepository
-            public: true # To be removed once used in the application

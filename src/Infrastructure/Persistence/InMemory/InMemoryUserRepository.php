@@ -8,7 +8,7 @@ use App\Domain\Repository\UserRepository;
 final class InMemoryUserRepository implements UserRepository
 {
     /** @var User[] */
-    private array $users;
+    private array $users = [];
 
     public function save(User ...$users): void
     {
