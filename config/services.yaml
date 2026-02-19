@@ -18,12 +18,12 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{DependencyInjection,Model,Migrations,Tests,Kernel.php}'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Repository\UserRepository:
-        class: App\Repository\DatabaseUserRepository
+    App\Domain\Repository\UserRepository:
+        class: App\Infrastructure\Persistence\Database\DatabaseUserRepository
 
 when@memory:
     services:
@@ -31,6 +31,6 @@ when@memory:
             autowire: true
             autoconfigure: true
 
-        App\Repository\UserRepository:
-            class: App\Repository\InMemoryUserRepository
+        App\Domain\Repository\UserRepository:
+            class: App\Infrastructure\Persistence\InMemory\InMemoryUserRepository
             public: true # To be removed once used in the application

@@ -18,7 +18,7 @@ doctrine:
                 type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/config/doctrine'
-                prefix: 'App\Entity'
+                prefix: 'App\Domain\Model'
                 alias: App
         controller_resolver:
             auto_mapping: false

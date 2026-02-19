@@ -2,8 +2,8 @@
 
 namespace App\Tests\Integration\Integration;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Domain\Model\User;
+use App\Domain\Repository\UserRepository;
 use App\Tests\Integration\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
