@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Domain\Exception\InvalidUser;
 use App\Domain\Exception\UserAlreadyExists;
+use App\Domain\Exception\UserNotFound;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Service\CreateUser;
@@ -49,6 +50,11 @@ final class CreateUserTest extends TestCase
 
         $userRepository
             ->expects($this->once())
+            ->method('getByEmail')
+            ->with($userEmail)
+            ->willThrowException(new UserNotFound($userEmail));
+        $userRepository
+            ->expects($this->once())
             ->method('save')
             ->with(self::callback(
                 static fn (User $user): bool => $user->email === $userEmail
@@ -81,11 +87,17 @@ final class CreateUserTest extends TestCase
     {
         $userRepository = $this->createMock(UserRepository::class);
         $createUser = new CreateUser($userRepository);
+        $userEmail = 'john.doe@email.com';
 
+        $userRepository
+            ->expects($this->once())
+            ->method('getByEmail')
+            ->with($userEmail)
+            ->willThrowException(new UserNotFound($userEmail));
         $userRepository->expects($this->never())->method('save');
 
         $this->expectException(InvalidUser::class);
-        ($createUser)('john.doe@email.com', '', '');
+        ($createUser)($userEmail, '', '');
     }
 
     #[Test]
