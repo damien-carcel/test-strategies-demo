@@ -32,7 +32,6 @@ final class CreateUserTest extends TestCase
         ($createUser)($userEmail, $userFirstname, $userLastname);
 
         $retrievedUser = $userRepository->getByEmail($userEmail);
-        self::assertInstanceOf(User::class, $retrievedUser);
         self::assertSame($userEmail, $retrievedUser->email);
         self::assertSame($userFirstname, $retrievedUser->firstname);
         self::assertSame($userLastname, $retrievedUser->lastname);
@@ -103,7 +102,6 @@ final class CreateUserTest extends TestCase
             self::assertSame('User with email "jane.doe@email.com" already exist.', $exception->getMessage());
 
             $existingUser = $userRepository->getByEmail('jane.doe@email.com');
-            self::assertInstanceOf(User::class, $existingUser);
             self::assertSame('Jane', $existingUser->firstname);
 
             return;

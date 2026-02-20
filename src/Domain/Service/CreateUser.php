@@ -3,6 +3,7 @@
 namespace App\Domain\Service;
 
 use App\Domain\Exception\UserAlreadyExists;
+use App\Domain\Exception\UserNotFound;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 
@@ -23,6 +24,12 @@ final readonly class CreateUser
 
     private function userAlreadyExists(string $email): bool
     {
-        return $this->userRepository->getByEmail($email) instanceof User;
+        try {
+            $this->userRepository->getByEmail($email);
+        } catch (UserNotFound) {
+            return false;
+        }
+
+        return true;
     }
 }
