@@ -56,7 +56,7 @@ final class CreateUserTest extends TestCase
     #[Test]
     public function itThrowsAnExceptionIfItTriesToCreateAUserWithSomeEmptyValuesWithInMemoryAdapters(): void
     {
-        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository = new InMemoryUserRepository();
         $createUser = new CreateUser($userRepository);
 
         try {
