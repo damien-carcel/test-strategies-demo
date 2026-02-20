@@ -13,7 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * For each tested scenario, we have two tests:
- * - One that uses the in-memory adapters, exactly like the acceptance tests in App\Tests\Acceptance\Domain\Service\CreateUserTest
+ * - One that uses the in-memory adapters, exactly like the acceptance tests in
+ *   App\Tests\Acceptance\Domain\Service\CreateUserTest
  * - One that uses mocks instead.
  */
 final class CreateUserTest extends TestCase
@@ -69,10 +70,11 @@ final class CreateUserTest extends TestCase
             ($createUser)('john.doe@email.com', '', '');
         } catch (\Throwable $exception) {
             self::assertInstanceOf(InvalidUser::class, $exception);
-            self::assertNull($userRepository->getByEmail('john.doe@email.com'));
 
             return;
         }
+
+        self::fail('An exception should have been thrown.');
     }
 
     #[Test]
