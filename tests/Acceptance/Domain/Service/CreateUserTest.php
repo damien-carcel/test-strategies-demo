@@ -3,6 +3,7 @@
 namespace App\Tests\Acceptance\Domain\Service;
 
 use App\Domain\Exception\InvalidUser;
+use App\Domain\Exception\UserAlreadyExists;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Service\CreateUser;
@@ -46,6 +47,27 @@ final class CreateUserTest extends AbstractAcceptanceTestCase
         } catch (\Throwable $exception) {
             self::assertInstanceOf(InvalidUser::class, $exception);
             self::assertNull($this->userRepository->getByEmail('john.doe@email.com'));
+
+            return;
+        }
+
+        self::fail('An exception should have been thrown.');
+    }
+
+    #[Test]
+    public function itThrowsAnExceptionIfItTriesToCreateAUserWithTheSameEmailAsAnAlreadyExistingUser(): void
+    {
+        ($this->createUser)('jane.doe@email.com', 'Jane', 'Doe');
+
+        try {
+            ($this->createUser)('jane.doe@email.com', 'John', 'Doe');
+        } catch (\Throwable $exception) {
+            self::assertInstanceOf(UserAlreadyExists::class, $exception);
+            self::assertSame('User with email "jane.doe@email.com" already exist.', $exception->getMessage());
+
+            $existingUser = $this->userRepository->getByEmail('jane.doe@email.com');
+            self::assertInstanceOf(User::class, $existingUser);
+            self::assertSame('Jane', $existingUser->firstname);
 
             return;
         }
