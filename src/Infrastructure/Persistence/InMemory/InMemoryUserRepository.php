@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\InMemory;
 
+use App\Domain\Exception\UserNotFound;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 
@@ -17,7 +18,7 @@ final class InMemoryUserRepository implements UserRepository
         }
     }
 
-    public function getByEmail(string $email): ?User
+    public function getByEmail(string $email): User
     {
         $user = array_first(array_filter(
             $this->users,
@@ -25,7 +26,7 @@ final class InMemoryUserRepository implements UserRepository
         ));
 
         if (!$user instanceof User) {
-            return null;
+            throw new UserNotFound($email);
         }
 
         return $user;

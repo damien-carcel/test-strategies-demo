@@ -2,7 +2,6 @@
 
 namespace App\Tests\EndToEnd\Infrastructure\UserInterface\Http;
 
-use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Tests\EndToEnd\AbstractEndToEndTestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,6 +19,10 @@ final class CreateUserControllerTest extends AbstractEndToEndTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseStatusCodeSame(201);
-        self::assertInstanceOf(User::class, self::getService(UserRepository::class)->getByEmail('john.doe@email.com'));
+
+        $storedUser = self::getService(UserRepository::class)->getByEmail('john.doe@email.com');
+        self::assertSame('john.doe@email.com', $storedUser->email);
+        self::assertSame('John', $storedUser->firstname);
+        self::assertSame('Doe', $storedUser->lastname);
     }
 }

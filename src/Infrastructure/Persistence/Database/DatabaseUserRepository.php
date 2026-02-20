@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Database;
 
+use App\Domain\Exception\UserNotFound;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,12 +26,12 @@ final class DatabaseUserRepository extends ServiceEntityRepository implements Us
         $this->getEntityManager()->flush();
     }
 
-    public function getByEmail(string $email): ?User
+    public function getByEmail(string $email): User
     {
         $user = $this->findOneBy(['email' => $email]);
 
         if (!$user instanceof User) {
-            return null;
+            throw new UserNotFound($email);
         }
 
         return $user;

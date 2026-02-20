@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Integration;
 
+use App\Domain\Exception\UserNotFound;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Tests\Integration\AbstractIntegrationTestCase;
@@ -48,13 +49,13 @@ final class UserRepositoryTest extends AbstractIntegrationTestCase
     #[Test]
     #[Group('with-in-memory-adapters')]
     #[Group('with-production-adapters')]
-    public function itReturnsNullIfTheUserDoesNotExist(): void
+    public function itThrowsAnExceptionIfTheUserDoesNotExist(): void
     {
         $user = new User('john.doe@email.com', 'John', 'Doe');
         $this->repository->save($user);
 
-        $user = $this->repository->getByEmail('jane.doe@email.com');
-
-        self::assertNull($user);
+        $this->expectException(UserNotFound::class);
+        $this->expectExceptionMessage('Could not find a user with email "jane.doe@email.com".');
+        $this->repository->getByEmail('jane.doe@email.com');
     }
 }

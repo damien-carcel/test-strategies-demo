@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Domain\Exception\InvalidUser;
 use App\Domain\Exception\UserAlreadyExists;
+use App\Domain\Exception\UserNotFound;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Service\CreateUser;
@@ -32,7 +33,6 @@ final class CreateUserTest extends TestCase
         ($createUser)($userEmail, $userFirstname, $userLastname);
 
         $retrievedUser = $userRepository->getByEmail($userEmail);
-        self::assertInstanceOf(User::class, $retrievedUser);
         self::assertSame($userEmail, $retrievedUser->email);
         self::assertSame($userFirstname, $retrievedUser->firstname);
         self::assertSame($userLastname, $retrievedUser->lastname);
@@ -48,6 +48,11 @@ final class CreateUserTest extends TestCase
         $userFirstname = 'John';
         $userLastname = 'Doe';
 
+        $userRepository
+            ->expects($this->once())
+            ->method('getByEmail')
+            ->with($userEmail)
+            ->willThrowException(new UserNotFound($userEmail));
         $userRepository
             ->expects($this->once())
             ->method('save')
@@ -82,11 +87,17 @@ final class CreateUserTest extends TestCase
     {
         $userRepository = $this->createMock(UserRepository::class);
         $createUser = new CreateUser($userRepository);
+        $userEmail = 'john.doe@email.com';
 
+        $userRepository
+            ->expects($this->once())
+            ->method('getByEmail')
+            ->with($userEmail)
+            ->willThrowException(new UserNotFound($userEmail));
         $userRepository->expects($this->never())->method('save');
 
         $this->expectException(InvalidUser::class);
-        ($createUser)('john.doe@email.com', '', '');
+        ($createUser)($userEmail, '', '');
     }
 
     #[Test]
@@ -103,7 +114,6 @@ final class CreateUserTest extends TestCase
             self::assertSame('User with email "jane.doe@email.com" already exist.', $exception->getMessage());
 
             $existingUser = $userRepository->getByEmail('jane.doe@email.com');
-            self::assertInstanceOf(User::class, $existingUser);
             self::assertSame('Jane', $existingUser->firstname);
 
             return;

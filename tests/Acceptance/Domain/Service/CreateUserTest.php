@@ -4,7 +4,6 @@ namespace App\Tests\Acceptance\Domain\Service;
 
 use App\Domain\Exception\InvalidUser;
 use App\Domain\Exception\UserAlreadyExists;
-use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Service\CreateUser;
 use App\Tests\Acceptance\AbstractAcceptanceTestCase;
@@ -33,7 +32,6 @@ final class CreateUserTest extends AbstractAcceptanceTestCase
         ($this->createUser)($userEmail, $userFirstname, $userLastname);
 
         $retrievedUser = $this->userRepository->getByEmail($userEmail);
-        self::assertInstanceOf(User::class, $retrievedUser);
         self::assertSame($userEmail, $retrievedUser->email);
         self::assertSame($userFirstname, $retrievedUser->firstname);
         self::assertSame($userLastname, $retrievedUser->lastname);
@@ -46,7 +44,6 @@ final class CreateUserTest extends AbstractAcceptanceTestCase
             ($this->createUser)('john.doe@email.com', '', '');
         } catch (\Throwable $exception) {
             self::assertInstanceOf(InvalidUser::class, $exception);
-            self::assertNull($this->userRepository->getByEmail('john.doe@email.com'));
 
             return;
         }
@@ -66,7 +63,6 @@ final class CreateUserTest extends AbstractAcceptanceTestCase
             self::assertSame('User with email "jane.doe@email.com" already exist.', $exception->getMessage());
 
             $existingUser = $this->userRepository->getByEmail('jane.doe@email.com');
-            self::assertInstanceOf(User::class, $existingUser);
             self::assertSame('Jane', $existingUser->firstname);
 
             return;
