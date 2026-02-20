@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Service;
 
 use App\Domain\Exception\InvalidUser;
+use App\Domain\Exception\UserAlreadyExists;
 use App\Domain\Model\User;
 use App\Domain\Repository\UserRepository;
 use App\Domain\Service\CreateUser;
@@ -10,6 +11,11 @@ use App\Infrastructure\Persistence\InMemory\InMemoryUserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * For each tested scenario, we have two tests:
+ * - One that uses the in-memory adapters, exactly like the acceptance tests in App\Tests\Acceptance\Domain\Service\CreateUserTest
+ * - One that uses mocks instead.
+ */
 final class CreateUserTest extends TestCase
 {
     #[Test]
@@ -79,5 +85,46 @@ final class CreateUserTest extends TestCase
 
         $this->expectException(InvalidUser::class);
         ($createUser)('john.doe@email.com', '', '');
+    }
+
+    #[Test]
+    public function itThrowsAnExceptionIfItTriesToCreateAUserWithTheSameEmailAsAnAlreadyExistingUserWithInMemoryAdapters(): void
+    {
+        $userRepository = new InMemoryUserRepository();
+        $createUser = new CreateUser($userRepository);
+        ($createUser)('jane.doe@email.com', 'Jane', 'Doe');
+
+        try {
+            ($createUser)('jane.doe@email.com', 'John', 'Doe');
+        } catch (\Throwable $exception) {
+            self::assertInstanceOf(UserAlreadyExists::class, $exception);
+            self::assertSame('User with email "jane.doe@email.com" already exist.', $exception->getMessage());
+
+            $existingUser = $userRepository->getByEmail('jane.doe@email.com');
+            self::assertInstanceOf(User::class, $existingUser);
+            self::assertSame('Jane', $existingUser->firstname);
+
+            return;
+        }
+
+        self::fail('An exception should have been thrown.');
+    }
+
+    #[Test]
+    public function itThrowsAnExceptionIfItTriesToCreateAUserWithTheSameEmailAsAnAlreadyExistingUserWithMocks(): void
+    {
+        $userRepository = $this->createMock(UserRepository::class);
+        $createUser = new CreateUser($userRepository);
+
+        $userRepository->expects($this->never())->method('save');
+        $userRepository
+            ->expects($this->once())
+            ->method('getByEmail')
+            ->with('jane.doe@email.com')
+            ->willReturn(new User('jane.doe@email.com', 'Jane', 'Doe'));
+
+        $this->expectException(UserAlreadyExists::class);
+        $this->expectExceptionMessage('User with email "jane.doe@email.com" already exist.');
+        ($createUser)('jane.doe@email.com', 'John', 'Doe');
     }
 }
