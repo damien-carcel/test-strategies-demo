@@ -8,9 +8,7 @@
 
 ## How to use the demo
 
-First, install the dependencies with `task dependencies:install`.
-
-Then, start the database with `task database:start`.
+Set up the application and start the database with `task up`.
 
 You are now ready to run the tests.
 
